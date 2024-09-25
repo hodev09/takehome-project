@@ -42,7 +42,7 @@ Thank you for taking the time to complete this assignment. We're excited to see 
 
 Please clone this repository to get started.
 
-When your project is ready for review, please export your project into a zip file (excluding the node_modules folder). Use Google Drive, Dropbox, OneDrive, or similar file upload service to host your project, then share a link so we can download this file.
+When your project is ready for review, please export your project into a zip file (excluding the node_modules folder). Use Google Drive, Dropbox, OneDrive, or similar file upload service to host your project, then share a link so we can download this file. Please do not submit a PR to submit your project.
 
 ## Your Tasks
 
