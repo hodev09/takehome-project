@@ -9,6 +9,10 @@ export interface User {
   created: Date;
   updated: Date;
   accessToken: string;
+  defaultDailyQuota: number; 
+  dailyQuotaPointsUsed: number;  
+  lastQuotaReset: Date; 
+  quotaUsageLog: Date[]
 }
 
 export interface Recipient {

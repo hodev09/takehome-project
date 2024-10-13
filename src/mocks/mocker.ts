@@ -25,5 +25,9 @@ export const generateFakeUser = (): User => {
     created: faker.date.past(),
     updated: faker.date.recent(),
     accessToken: generateAccessToken(),
+    defaultDailyQuota : 100,
+    dailyQuotaPointsUsed:0,
+    lastQuotaReset:new Date(),
+    quotaUsageLog:[]
   };
 };

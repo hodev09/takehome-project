@@ -53,4 +53,17 @@ export class UserController {
       accessToken: newUser.accessToken,
     });
   };
+
+  // Fetch all users (GET /api/users)
+  getQuotaLogs = (req: Request, res: Response): void => {
+    const user = (req as any).user;
+    res.json({
+      name: user.name,
+      email: user.email,
+      dailyQuotaPointsUsed: user.dailyQuotaPointsUsed,
+      remaingDailyQuota:user.defaultDailyQuota-user.dailyQuotaPointsUsed,
+      totalQuotaPoints : user.defaultDailyQuota,
+      quotaUsageLog: user.quotaUsageLog,
+    });
+  };
 }

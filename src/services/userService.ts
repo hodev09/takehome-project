@@ -1,5 +1,6 @@
 import { User, State } from "../types/types";
 import { generateFakeUser, generateAccessToken } from "../mocks/mocker";
+import { saveState } from "../utils";
 
 export class UserService {
   private state: State;
@@ -21,10 +22,15 @@ export class UserService {
       created: new Date(),
       updated: new Date(),
       accessToken: generateAccessToken(),
+      defaultDailyQuota : 100,
+      dailyQuotaPointsUsed:0,
+      lastQuotaReset:new Date(),
+      quotaUsageLog:[]
     };
 
     // Add the new user to the in-memory state
     this.state.users.push(newUser);
+    saveState(this.state);
 
     return newUser;
   }

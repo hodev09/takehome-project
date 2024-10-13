@@ -1,42 +1,54 @@
 import fs from "fs";
 import { createFakeRecipient, generateFakeUser } from "./mocks/mocker";
-import { State } from "./types/types";
+import { Recipient, State, User } from "./types/types";
 
 // Load existing recipients or create new ones
 export const initialConfiguration = (): State => {
   const dataDir = "./src/data";
-  const filePathUrl = `${dataDir}/recipients.json`;
-  try {
-    fs.accessSync(filePathUrl);
-  } catch (err) {
-    fs.mkdirSync("./src/data", { recursive: true });
-    fs.writeFileSync(filePathUrl, "[]");
-  }
-  let save = false;
+  const recipientsFilePath = `${dataDir}/recipients.json`;
+  const usersFilePath = `${dataDir}/users.json`;
 
-  var obj: State = JSON.parse(fs.readFileSync(filePathUrl, "utf8")) || {};
-
-  // Try to extract recipients
-  if (!obj.recipients) {
-    const recipients = new Array(2000).fill(0).map(() => createFakeRecipient());
-    obj.recipients = recipients;
-    save = true;
+  // Ensure both files exist
+  if (!fs.existsSync(recipientsFilePath)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+    fs.writeFileSync(recipientsFilePath, "[]");
   }
 
-  if (!obj.users) {
-    save = true;
-    const user = generateFakeUser();
-    obj.users = [user];
+  if (!fs.existsSync(usersFilePath)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+    fs.writeFileSync(usersFilePath, "[]");
   }
 
-  const endState: State = {
-    recipients: obj.recipients,
-    users: obj.users,
+  // Read recipients from file
+  let recipients : Recipient[] = JSON.parse(fs.readFileSync(recipientsFilePath, "utf8")) || [];
+  if (recipients.length === 0) {
+    recipients = new Array(2000).fill(0).map(() => createFakeRecipient());
+    fs.writeFileSync(recipientsFilePath, JSON.stringify(recipients), "utf8");
+  }
+
+  // Read users from file
+  let users : User[] = JSON.parse(fs.readFileSync(usersFilePath, "utf8")) || [];
+  if (users.length === 0) {
+    users = [generateFakeUser()];
+    fs.writeFileSync(usersFilePath, JSON.stringify(users), "utf8");
+  }
+
+  // Create unified in-memory state
+  const state: State = {
+    recipients,
+    users,
   };
 
-  if (save) {
-    fs.writeFileSync(filePathUrl, JSON.stringify({ ...obj }), "utf8");
-  }
+  return state;
+};
 
-  return obj;
+// Save state (recipients and users) to separate files
+export const saveState = (state: State) => {
+  const dataDir = "./src/data";
+  const recipientsFilePath = `${dataDir}/recipients.json`;
+  const usersFilePath = `${dataDir}/users.json`;
+
+  // Save recipients and users separately
+  fs.writeFileSync(recipientsFilePath, JSON.stringify(state.recipients), "utf8");
+  fs.writeFileSync(usersFilePath, JSON.stringify(state.users), "utf8");
 };
