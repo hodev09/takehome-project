@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs", // Make sure this is set to "commonjs" if you're using Node.js
+    "moduleResolution": "node", // This is recommended for Node.js projects
+    "target": "es6",
+    "typeRoots": ["./node_modules/@types", "src/types"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

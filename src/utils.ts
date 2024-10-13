@@ -1,6 +1,6 @@
 import fs from "fs";
 import { createFakeRecipient, generateFakeUser } from "./mocks/mocker";
-import { State } from "./types";
+import { State } from "./types/types";
 
 // Load existing recipients or create new ones
 export const initialConfiguration = (): State => {

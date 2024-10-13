@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Recipient, User } from "../types";
+import { Recipient, User } from "../types/types";
 
 export const createFakeRecipient = (): Recipient => {
   return {
