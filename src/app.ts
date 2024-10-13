@@ -6,6 +6,7 @@ import { UserController } from "./controllers/userController";
 import { authenticateUser } from "./middlewares/authMiddleware";
 import { perSecondLimiter, perDayLimiter } from "./utilities/rateLimiter";
 import { checkUserDailyQuota } from "./middlewares/dailyQuotaMiddleware";
+import { deductQuotaMiddleware } from "./middlewares/deductQuotaMiddleware";
 
 
 // Welcome to your express server. We'll be adding some methods over here to design a robust API system in place!
@@ -51,7 +52,8 @@ app.get("/api/recipients", async (req, res) => {
 
 // Submit a recipient for processing
 // TODO(SHIP): Implement the submit endpoint
-app.post("/api/submit",authenticateUser(state),checkUserDailyQuota(state),perSecondLimiter, async (req, res) => {
+app.post("/api/submit",authenticateUser(state),checkUserDailyQuota(state),
+          perSecondLimiter,deductQuotaMiddleware(state), async (req, res) => {
   const body = req.body;
   const id = "fakeid";
   
@@ -64,16 +66,6 @@ app.post("/api/submit",authenticateUser(state),checkUserDailyQuota(state),perSec
     },
     body: JSON.stringify({ id }),
   });
-
-  //doing this here because the mock server can also return 500 and 400, which means user was not able to use the quota..
-  if(response.status==200){
-    const user: User | undefined = state.users.find(user => user.email === (req as any).user.email);
-    if(user){
-      user.dailyQuotaPointsUsed++;
-      user.quotaUsageLog.push(new Date());
-      saveState(state);
-    }
-  }
 
   const jsonRes = await response.json();
   res.json(jsonRes);
